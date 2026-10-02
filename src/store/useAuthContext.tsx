@@ -1,78 +1,92 @@
-import { createContext, ReactNode, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useState,
+} from "react";
 import { UserType } from "../interfaces/general";
 
 export const AuthContext = createContext<{
   isAuthenticated: boolean;
   user: UserType | null;
-  login: (data: Omit<UserType, "name">) => {
+  setIsAuthenticated: Dispatch<SetStateAction<boolean>>;
+  login: (data: Omit<UserType, "name">) => Promise<{
     isSuccess: boolean;
     message: string;
-  };
-  signUp: (data: UserType) => boolean;
+  }>;
+  signUp: (data: UserType) => Promise<{
+    isSuccess: boolean;
+    message: string;
+  }>;
   logOut: () => Promise<void>;
 }>({
   isAuthenticated: false,
   user: null,
-  login: () => ({ isSuccess: false, message: "" }),
-  signUp: () => false,
+  setIsAuthenticated: () => {},
+  login: async () => ({ isSuccess: false, message: "" }),
+  signUp: async () => ({ isSuccess: false, message: "" }),
   logOut: async () => {},
 });
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
-  const [userList, setUserList] = useState<UserType[]>([]);
+  const [userList, setUserList] = useState<UserType[]>([
+    { email: "test@test.com", name: "test", password: "123456" },
+  ]);
   const [user, setUser] = useState<null | UserType>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  function login(data: Omit<UserType, "name">) {
-    let isSuccess = false;
-    const user = userList.find(
-      (item) => item.email === data.email && item.password === data.password,
-    );
+  async function login(data: Omit<UserType, "name">) {
+    const user = userList.find((item) => item.email === data.email);
 
-    if (!user)
-      return {
-        isSuccess,
-        message: "User not found. Please proceed to sign up screen.",
-      };
+    if (!user) {
+      throw new Error("User not found. Please proceed to sign up screen.");
+    }
 
-    const isValidPass = user.password === data.password;
-    if (!isValidPass)
-      return {
-        isSuccess,
-        message: "Password is incorrect. Reset your password to login.",
-      };
+    if (user.password !== data.password) {
+      throw new Error("Password is incorrect. Reset your password to login.");
+    }
 
     setUser(user);
     setIsAuthenticated(true);
-    isSuccess = true;
+
     return {
-      isSuccess,
+      isSuccess: true,
       message: "Login Successfully!",
     };
   }
 
-  function signUp(data: UserType) {
-    let isSuccess = false;
+  async function signUp(data: UserType) {
+    const exist = userList.some((item) => item.email === data.email);
 
-    const exist = userList.some(
-      (item) => item.email === data.email && item.password === data.password,
-    );
+    if (exist)
+      throw new Error("User already exists. Please proceed to login screen.");
 
-    if (!exist) {
-      setUserList((prev) => [...prev, data]);
-      setUser(data);
-      setIsAuthenticated(true);
-      isSuccess = true;
-    }
+    setUserList((prev) => [...prev, data]);
+    setUser(data);
+    setIsAuthenticated(true);
 
-    return isSuccess;
+    return {
+      isSuccess: true,
+      message: "Signup success.",
+    };
   }
 
-  async function logOut() {}
+  async function logOut() {
+    setUser(null);
+    setIsAuthenticated(false);
+  }
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, user, login, logOut, signUp }}
+      value={{
+        isAuthenticated,
+        user,
+        setIsAuthenticated,
+        login,
+        logOut,
+        signUp,
+      }}
     >
       {children}
     </AuthContext.Provider>
