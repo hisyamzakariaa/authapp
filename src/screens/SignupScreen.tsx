@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
 
 import CustomScreen from "../components/ui/CustomScreen";
 import Heading from "../components/ui/texts/Heading";
@@ -10,15 +11,19 @@ import XStack from "../components/ui/XStack";
 import { NavigationProp } from "../interfaces/general";
 import CustomKeyboardAvoidingView from "../components/ui/CustomKeyboardAvoidingView";
 import useSignupFormik from "../hooks/useSignupFormik";
-import { useState } from "react";
 import SuccessFailedModal from "../components/ui/SuccessFailedModal";
 
 const SignupScreen = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const { navigate, replace, goBack } = useNavigation<NavigationProp>();
-  const formik = useSignupFormik();
+  const { goBack } = useNavigation<NavigationProp>();
+
+  const formik = useSignupFormik(() => {
+    setIsSuccess(true);
+    setOpen(true);
+  });
 
   const isError =
     !!formik.errors.name || !!formik.errors.email || !!formik.errors.password;
@@ -78,9 +83,10 @@ const SignupScreen = () => {
             }
             onPress={async () => {
               try {
-                formik.submitForm();
+                await formik.submitForm();
                 setIsSuccess(true);
               } catch (error) {
+                setErrorMessage((error as Error).message);
               } finally {
                 setOpen(true);
               }
@@ -97,7 +103,7 @@ const SignupScreen = () => {
         description={
           isSuccess
             ? "Your account has been registererd successfully."
-            : "Failed to register account. Please try again."
+            : errorMessage
         }
         header={isSuccess ? "Success" : "Failed"}
       />
