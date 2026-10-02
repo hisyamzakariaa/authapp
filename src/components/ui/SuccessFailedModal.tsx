@@ -6,22 +6,27 @@ import Body from "./texts/Body";
 
 const SuccessFailedModal = ({
   open,
-  setOpen,
   description,
   header,
+  setOpen,
+  redirectFunction,
 }: {
   open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
   description: string;
   header: string;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  redirectFunction?: () => void;
 }) => {
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setOpen(false);
-    }, 2000);
+    if (open) {
+      const timer = setTimeout(() => {
+        setOpen(false);
+        if (redirectFunction) redirectFunction();
+      }, 2000);
 
-    return () => clearTimeout(timer);
-  }, [open]);
+      return () => clearTimeout(timer);
+    }
+  }, [open, redirectFunction]);
 
   return (
     <Modal
