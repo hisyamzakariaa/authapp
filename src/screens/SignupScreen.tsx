@@ -20,10 +20,7 @@ const SignupScreen = () => {
 
   const { goBack } = useNavigation<NavigationProp>();
 
-  const formik = useSignupFormik(() => {
-    setIsSuccess(true);
-    setOpen(true);
-  });
+  const formik = useSignupFormik();
 
   const isError =
     !!formik.errors.name || !!formik.errors.email || !!formik.errors.password;

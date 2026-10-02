@@ -23,11 +23,13 @@ const useSignupFormik = () => {
     }),
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true);
-
-      const isSuccess = signUp(values);
-      if (!isSuccess) throw new Error("failed!");
-
-      setSubmitting(false);
+      try {
+        await signUp(values);
+      } catch (error) {
+        throw error;
+      } finally {
+        setSubmitting(false);
+      }
     },
   });
 };
