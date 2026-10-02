@@ -1,11 +1,5 @@
-import {
-  Text,
-  Pressable,
-  TextProps,
-  PressableProps,
-  StyleProp,
-} from "react-native";
-import { ReactNode } from "react";
+import { Text, Pressable } from "react-native";
+
 import { CustomButtonProps } from "../../interfaces/general";
 
 const CustomButton = ({ children, textStyle, ...props }: CustomButtonProps) => {

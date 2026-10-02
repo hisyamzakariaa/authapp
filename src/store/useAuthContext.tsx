@@ -5,6 +5,7 @@ import {
   SetStateAction,
   useState,
 } from "react";
+
 import { UserType } from "../interfaces/general";
 
 export const AuthContext = createContext<{

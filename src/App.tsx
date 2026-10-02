@@ -8,10 +8,10 @@ import { Asset } from "expo-asset";
 import { createURL } from "expo-linking";
 import * as SplashScreen from "expo-splash-screen";
 import { useColorScheme } from "react-native";
+import { useMemo } from "react";
 
 import AuthProvider from "./store/useAuthContext";
 import RootNavigation from "./navigation/RootNavigation";
-import { useMemo } from "react";
 
 Asset.loadAsync([
   ...NavigationAssets,

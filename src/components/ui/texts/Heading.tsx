@@ -1,5 +1,5 @@
-import { View, Text } from "react-native";
-import { ReactNode } from "react";
+import { Text } from "react-native";
+
 import { CustomTextProps } from "../../../interfaces/general";
 
 const Heading = ({ children, ...props }: CustomTextProps) => {

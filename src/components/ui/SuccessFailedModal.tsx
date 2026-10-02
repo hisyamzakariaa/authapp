@@ -1,5 +1,6 @@
-import { View, Text, Modal } from "react-native";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Modal } from "react-native";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+
 import YStack from "./YStack";
 import Heading from "./texts/Heading";
 import Body from "./texts/Body";

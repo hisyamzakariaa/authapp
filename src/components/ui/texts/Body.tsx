@@ -1,5 +1,5 @@
-import { View, Text, TextStyle, StyleProp } from "react-native";
-import React, { ReactNode } from "react";
+import { Text } from "react-native";
+
 import { CustomTextProps } from "../../../interfaces/general";
 
 const Body = ({ children, ...props }: CustomTextProps) => {

@@ -1,16 +1,14 @@
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 import CustomScreen from "../components/ui/CustomScreen";
 import Heading from "../components/ui/texts/Heading";
 import CustomInput from "../components/ui/CustomInput";
 import YStack from "../components/ui/YStack";
 import CustomButton from "../components/ui/CustomButton";
-import useAuthentication from "../hooks/useAuthentication";
-import { useNavigation } from "@react-navigation/native";
-import Subtitle from "../components/ui/texts/Subtitle";
 import Body from "../components/ui/texts/Body";
 import XStack from "../components/ui/XStack";
-import { NavigationProp, UserType } from "../interfaces/general";
+import { NavigationProp } from "../interfaces/general";
 import SuccessFailedModal from "../components/ui/SuccessFailedModal";
 import useSignInFormik from "../hooks/useSignInFormik";
 import CustomKeyboardAvoidingView from "../components/ui/CustomKeyboardAvoidingView";

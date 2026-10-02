@@ -1,5 +1,5 @@
-import { View, Text, ViewProps, Pressable } from "react-native";
-import { ReactNode } from "react";
+import { Pressable } from "react-native";
+
 import { StackProps } from "../../interfaces/general";
 
 const YStack = ({ children, ...props }: StackProps) => {
