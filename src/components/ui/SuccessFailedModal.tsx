@@ -15,6 +15,14 @@ const SuccessFailedModal = ({
   description: string;
   header: string;
 }) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setOpen(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [open]);
+
   return (
     <Modal
       backdropColor={"transparent"}
