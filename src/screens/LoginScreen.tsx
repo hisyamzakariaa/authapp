@@ -76,7 +76,6 @@ const LoginScreen = () => {
               try {
                 await formik.submitForm();
                 setStatus("success");
-                replace("Homescreen");
               } catch (error) {
                 setStatus("failed");
                 setErrorMessage((error as Error).message);
