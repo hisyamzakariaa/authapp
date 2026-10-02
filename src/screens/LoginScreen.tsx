@@ -19,7 +19,7 @@ const LoginScreen = () => {
 
   const [status, setStatus] = useState<"success" | "failed" | null>(null);
 
-  const { navigate, replace } = useNavigation<NavigationProp>();
+  const { navigate } = useNavigation<NavigationProp>();
   const formik = useSignInFormik();
 
   const isError = !!formik.errors.email || !!formik.errors.password;
