@@ -16,12 +16,9 @@ import useSignInFormik from "../hooks/useSignInFormik";
 import CustomKeyboardAvoidingView from "../components/ui/CustomKeyboardAvoidingView";
 
 const LoginScreen = () => {
-  const { login } = useAuthentication();
   const [open, setOpen] = useState<boolean>(false);
-  const [data, setData] = useState<Omit<UserType, "name">>({
-    email: "",
-    password: "",
-  });
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
   const [status, setStatus] = useState<"success" | "failed" | null>(null);
 
   const { navigate, replace } = useNavigation<NavigationProp>();
@@ -83,8 +80,8 @@ const LoginScreen = () => {
                 setStatus("success");
                 replace("Homescreen");
               } catch (error) {
-                console.log(error, "sinini");
                 setStatus("failed");
+                setErrorMessage((error as Error).message);
                 setOpen(true);
               }
             }}
@@ -101,9 +98,7 @@ const LoginScreen = () => {
           status === "success" ? "Login Successfully!" : "Failed to login!"
         }
         description={
-          status === "success"
-            ? "Login Successfully!"
-            : "Please make sure that your email and password are correct."
+          status === "success" ? "Login Successfully!" : errorMessage
         }
       />
     </CustomScreen>

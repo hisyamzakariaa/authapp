@@ -23,8 +23,9 @@ const useSignInFormik = () => {
     onSubmit: async (values, { setSubmitting }) => {
       setSubmitting(true);
 
-      const isSuccess = login(values);
-      if (!isSuccess) throw new Error("failed!");
+      const { isSuccess, message } = login(values);
+
+      if (!isSuccess) throw new Error(message);
 
       setSubmitting(false);
     },

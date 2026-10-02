@@ -1,17 +1,19 @@
 import { createContext, ReactNode, useState } from "react";
-import { NavigationProp, UserType } from "../interfaces/general";
-import { useNavigation } from "@react-navigation/native";
+import { UserType } from "../interfaces/general";
 
 export const AuthContext = createContext<{
   isAuthenticated: boolean;
   user: UserType | null;
-  login: (data: Omit<UserType, "name">) => boolean;
+  login: (data: Omit<UserType, "name">) => {
+    isSuccess: boolean;
+    message: string;
+  };
   signUp: (data: UserType) => boolean;
   logOut: () => Promise<void>;
 }>({
   isAuthenticated: false,
   user: null,
-  login: () => false,
+  login: () => ({ isSuccess: false, message: "" }),
   signUp: () => false,
   logOut: async () => {},
 });
@@ -21,22 +23,32 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<null | UserType>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  console.log(userList, isAuthenticated);
-
   function login(data: Omit<UserType, "name">) {
     let isSuccess = false;
-
     const user = userList.find(
       (item) => item.email === data.email && item.password === data.password,
     );
 
-    if (user) {
-      setUser(user);
-      setIsAuthenticated(true);
-      isSuccess = true;
-    }
+    if (!user)
+      return {
+        isSuccess,
+        message: "User not found. Please proceed to sign up screen.",
+      };
 
-    return isSuccess;
+    const isValidPass = user.password === data.password;
+    if (!isValidPass)
+      return {
+        isSuccess,
+        message: "Password is incorrect. Reset your password to login.",
+      };
+
+    setUser(user);
+    setIsAuthenticated(true);
+    isSuccess = true;
+    return {
+      isSuccess,
+      message: "Login Successfully!",
+    };
   }
 
   function signUp(data: UserType) {

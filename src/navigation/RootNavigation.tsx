@@ -11,8 +11,6 @@ import useAuthentication from "../hooks/useAuthentication";
 const RootNavigation = () => {
   const { isAuthenticated } = useAuthentication();
 
-  console.log({ isAuthenticated });
-
   return createNativeStackNavigator({
     screens: isAuthenticated
       ? {
