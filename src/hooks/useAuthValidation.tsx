@@ -26,8 +26,6 @@ const useAuthValidation = () => {
         const lastActive = (userData as LoggedInUserType).time;
         const timeDiff = (currentTime - lastActive) / (1000 * 60);
 
-        console.log({ users, user, timeDiff });
-
         if (timeDiff < 5) {
           setAuthStatus(AuthStatusEnums.AUTH);
           await AsyncStorage.setItem(
