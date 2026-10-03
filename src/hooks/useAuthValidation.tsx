@@ -11,9 +11,6 @@ const useAuthValidation = () => {
 
   useEffect(() => {
     async function authValidation() {
-      const users = await AsyncStorage.getItem("users");
-      const user = await AsyncStorage.getItem("user");
-
       try {
         const userData = await getLoggedInUser();
 
