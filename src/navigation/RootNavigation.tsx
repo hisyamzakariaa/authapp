@@ -2,48 +2,19 @@ import {
   createNativeStackNavigator,
   createNativeStackScreen,
 } from "@react-navigation/native-stack";
-import { useEffect } from "react";
 
 import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
 import useAuthentication from "../hooks/useAuthentication";
-import { getLoggedInUser } from "../services/auth.service";
-import { LoggedInUserType } from "../interfaces/general";
 import { AuthStatusEnums } from "../enums/general";
 import LoadinScreen from "../screens/LoadinScreen";
+import useAuthValidation from "../hooks/useAuthValidation";
 
 const RootNavigation = () => {
-  const { authStatus, setAuthStatus } = useAuthentication();
+  const { authStatus } = useAuthentication();
 
-  useEffect(() => {
-    if (authStatus === AuthStatusEnums.UNKNOWN) {
-      async function authValidation() {
-        try {
-          const userData = await getLoggedInUser();
-
-          if (!userData) {
-            setAuthStatus(AuthStatusEnums.UNAUTH);
-            return;
-          }
-
-          const currentTime = Date.now();
-          const lastActive = (userData as LoggedInUserType).time;
-          const timeDiff = (currentTime - lastActive) / (1000 * 60);
-
-          setAuthStatus(
-            timeDiff > 1 ? AuthStatusEnums.UNAUTH : AuthStatusEnums.AUTH,
-          );
-        } catch (error) {
-          console.log(error);
-        }
-      }
-
-      authValidation();
-    }
-  }, [authStatus]);
-
-  console.log({ authStatus });
+  useAuthValidation();
 
   return createNativeStackNavigator({
     screens:
