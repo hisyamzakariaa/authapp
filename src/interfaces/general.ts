@@ -16,6 +16,10 @@ export interface UserType {
   password: string;
 }
 
+export interface LoggedInUserType extends UserType {
+  time: number;
+}
+
 export interface StackProps extends PressableProps {
   children: ReactNode;
 }

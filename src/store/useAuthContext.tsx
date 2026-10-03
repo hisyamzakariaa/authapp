@@ -5,13 +5,16 @@ import {
   SetStateAction,
   useState,
 } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { UserType } from "../interfaces/general";
+import { getUserData } from "../services/auth.service";
+import { AuthStatusEnums } from "../enums/general";
 
 export const AuthContext = createContext<{
-  isAuthenticated: boolean;
+  authStatus: AuthStatusEnums;
   user: UserType | null;
-  setIsAuthenticated: Dispatch<SetStateAction<boolean>>;
+  setAuthStatus: Dispatch<SetStateAction<AuthStatusEnums>>;
   login: (data: Omit<UserType, "name">) => Promise<{
     isSuccess: boolean;
     message: string;
@@ -22,34 +25,41 @@ export const AuthContext = createContext<{
   }>;
   logOut: () => Promise<void>;
 }>({
-  isAuthenticated: false,
+  authStatus: AuthStatusEnums.UNKNOWN,
   user: null,
-  setIsAuthenticated: () => {},
+  setAuthStatus: () => {},
   login: async () => ({ isSuccess: false, message: "" }),
   signUp: async () => ({ isSuccess: false, message: "" }),
   logOut: async () => {},
 });
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
-  const [userList, setUserList] = useState<UserType[]>([
-    { email: "test@test.com", name: "test", password: "123456" },
-  ]);
   const [user, setUser] = useState<null | UserType>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [authStatus, setAuthStatus] = useState<AuthStatusEnums>(
+    AuthStatusEnums.UNKNOWN,
+  );
 
   async function login(data: Omit<UserType, "name">) {
-    const user = userList.find((item) => item.email === data.email);
+    const usersData = await getUserData();
+
+    const user = usersData.find((item) => item.email === data.email);
 
     if (!user) {
       throw new Error("User not found. Please proceed to sign up screen.");
     }
 
     if (user.password !== data.password) {
-      throw new Error("Password is incorrect. Reset your password to login.");
+      throw new Error(
+        "Password is incorrect. Check or reset your password to login.",
+      );
     }
 
+    await AsyncStorage.setItem(
+      "user",
+      JSON.stringify({ ...data, time: Date.now() }),
+    );
     setUser(user);
-    setIsAuthenticated(true);
+    setAuthStatus(AuthStatusEnums.AUTH);
 
     return {
       isSuccess: true,
@@ -58,14 +68,27 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function signUp(data: UserType) {
-    const exist = userList.some((item) => item.email === data.email);
+    const users = await AsyncStorage.getItem("users");
+
+    if (!users) throw new Error("Failed loading users. Please try again.");
+
+    const userData: UserType[] = JSON.parse(users);
+    const exist = userData.some((item) => item.email === data.email);
 
     if (exist)
       throw new Error("User already exists. Please proceed to login screen.");
 
-    setUserList((prev) => [...prev, data]);
+    userData.push(data);
+
+    await AsyncStorage.setItem("users", JSON.stringify(userData));
+    await AsyncStorage.setItem(
+      "user",
+      JSON.stringify({ ...data, time: Date.now() }),
+    );
+
+    await AsyncStorage.setItem("user", JSON.stringify(null));
     setUser(data);
-    setIsAuthenticated(true);
+    setAuthStatus(AuthStatusEnums.AUTH);
 
     return {
       isSuccess: true,
@@ -75,15 +98,15 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   async function logOut() {
     setUser(null);
-    setIsAuthenticated(false);
+    setAuthStatus(AuthStatusEnums.UNAUTH);
   }
 
   return (
     <AuthContext.Provider
       value={{
-        isAuthenticated,
+        authStatus,
         user,
-        setIsAuthenticated,
+        setAuthStatus,
         login,
         logOut,
         signUp,
