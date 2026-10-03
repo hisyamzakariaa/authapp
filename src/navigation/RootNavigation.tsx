@@ -2,7 +2,7 @@ import {
   createNativeStackNavigator,
   createNativeStackScreen,
 } from "@react-navigation/native-stack";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
@@ -29,11 +29,11 @@ const RootNavigation = () => {
 
           const currentTime = Date.now();
           const lastActive = (userData as LoggedInUserType).time;
-          const timeDiff = currentTime - lastActive / (1000 * 60);
+          const timeDiff = (currentTime - lastActive) / (1000 * 60);
 
-          console.log(timeDiff);
-
-          if (timeDiff > 30) setAuthStatus(AuthStatusEnums.UNAUTH);
+          setAuthStatus(
+            timeDiff > 1 ? AuthStatusEnums.UNAUTH : AuthStatusEnums.AUTH,
+          );
         } catch (error) {
           console.log(error);
         }
@@ -42,6 +42,8 @@ const RootNavigation = () => {
       authValidation();
     }
   }, [authStatus]);
+
+  console.log({ authStatus });
 
   return createNativeStackNavigator({
     screens:
