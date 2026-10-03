@@ -97,6 +97,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function logOut() {
+    await AsyncStorage.setItem("users", JSON.stringify(null));
     setUser(null);
     setAuthStatus(AuthStatusEnums.UNAUTH);
   }
