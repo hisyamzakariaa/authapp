@@ -84,7 +84,6 @@ const SignupScreen = () => {
                 setIsSuccess(true);
               } catch (error) {
                 setErrorMessage((error as Error).message);
-              } finally {
                 setOpen(true);
               }
             }}

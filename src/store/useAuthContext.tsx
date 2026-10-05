@@ -15,21 +15,15 @@ export const AuthContext = createContext<{
   authStatus: AuthStatusEnums;
   user: UserType | null;
   setAuthStatus: Dispatch<SetStateAction<AuthStatusEnums>>;
-  login: (data: Omit<UserType, "name">) => Promise<{
-    isSuccess: boolean;
-    message: string;
-  }>;
-  signUp: (data: UserType) => Promise<{
-    isSuccess: boolean;
-    message: string;
-  }>;
+  login: (data: Omit<UserType, "name">) => Promise<void>;
+  signUp: (data: UserType) => Promise<void>;
   logOut: () => Promise<void>;
 }>({
   authStatus: AuthStatusEnums.UNKNOWN,
   user: null,
   setAuthStatus: () => {},
-  login: async () => ({ isSuccess: false, message: "" }),
-  signUp: async () => ({ isSuccess: false, message: "" }),
+  login: async () => {},
+  signUp: async () => {},
   logOut: async () => {},
 });
 
@@ -60,19 +54,11 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     );
     setUser(user);
     setAuthStatus(AuthStatusEnums.AUTH);
-
-    return {
-      isSuccess: true,
-      message: "Login Successfully!",
-    };
   }
 
   async function signUp(data: UserType) {
-    const users = await AsyncStorage.getItem("users");
+    const userData = await getUserData();
 
-    if (!users) throw new Error("Failed loading users. Please try again.");
-
-    const userData: UserType[] = JSON.parse(users);
     const exist = userData.some((item) => item.email === data.email);
 
     if (exist)
@@ -89,11 +75,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     await AsyncStorage.setItem("user", JSON.stringify(null));
     setUser(data);
     setAuthStatus(AuthStatusEnums.AUTH);
-
-    return {
-      isSuccess: true,
-      message: "Signup success.",
-    };
   }
 
   async function logOut() {
