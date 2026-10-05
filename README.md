@@ -18,21 +18,23 @@ It includes the following feauture:
 
 3. For Expo Go, donwload the Expo Go application from app store/play store.
 
-4. Sign in to your account, both on Expo CLI and Expo Go app on your device.
+4. Sign in to your account on both platform, Expo CLI on your laptop and Expo Go app on your phone.
 
 5. Run npx expo start --go
 
-6. Scan qr code with your device and continue to use the applciation.
+6. Scan qr code with your phone and continue to use the applciation.
 
 7. For development build, build project
 
    npx expo prebuild
 
-8. Run the project
+8. Connect your phone to your laptop using USB cable
+
+9. Run the project
 
    npm run android / npm run ios
 
-The app will open and you can proceed to use the authentication app.
+This will install the build on your phone and you can proceed to use the authentication app when the build is done.
 
 ## Notes
 
