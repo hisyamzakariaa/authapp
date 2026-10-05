@@ -1,22 +1,22 @@
 import { Assets as NavigationAssets } from "@react-navigation/elements";
-import {
-  createStaticNavigation,
-  DarkTheme,
-  DefaultTheme,
-} from "@react-navigation/native";
+import { DarkTheme, DefaultTheme } from "@react-navigation/native";
 import { Asset } from "expo-asset";
 import { createURL } from "expo-linking";
 import * as SplashScreen from "expo-splash-screen";
 import { useColorScheme, StatusBar, AppState } from "react-native";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import AuthProvider from "./store/useAuthContext";
-import RootNavigation from "./navigation/RootNavigation";
+import {
+  AuthedNavigation,
+  UnauthedNavigation,
+} from "./navigation/RootNavigation";
 import { getLoggedInUser } from "./services/auth.service";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LoggedInUserType } from "./interfaces/general";
 import { AuthStatusEnums } from "./enums/general";
 import useAuthentication from "./hooks/useAuthentication";
+import LoadingScreen from "./screens/LoadingScreen";
 
 const TIME_LIMIT = 0.5;
 
@@ -34,17 +34,10 @@ const linking = {
 };
 
 function AppContent() {
-  const { user } = useAuthentication();
+  const { user, authStatus } = useAuthentication();
 
   const colorScheme = useColorScheme();
   const theme = colorScheme === "dark" ? DarkTheme : DefaultTheme;
-
-  const RootStack = RootNavigation();
-
-  const Navigation = useMemo(
-    () => createStaticNavigation(RootStack),
-    [RootStack],
-  );
 
   const appState = useRef(AppState.currentState);
   const { setAuthStatus } = useAuthentication();
@@ -131,6 +124,15 @@ function AppContent() {
       subscription.remove();
     };
   }, []);
+
+  useEffect(() => {
+    if (authStatus === AuthStatusEnums.UNKNOWN) SplashScreen.hideAsync();
+  }, [authStatus]);
+
+  if (authStatus === AuthStatusEnums.UNKNOWN) return <LoadingScreen />;
+
+  const Navigation =
+    authStatus === AuthStatusEnums.AUTH ? AuthedNavigation : UnauthedNavigation;
 
   return (
     <Navigation
