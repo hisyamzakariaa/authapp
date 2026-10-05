@@ -87,12 +87,7 @@ const LoginScreen = () => {
           </XStack>
 
           <CustomButton
-            disabled={
-              !formik.values.email ||
-              !formik.values.password ||
-              isError ||
-              formik.isSubmitting
-            }
+            disabled={formik.isSubmitting}
             onPress={async () => {
               try {
                 await formik.submitForm();
