@@ -14,13 +14,21 @@ It includes the following feauture:
 
    npm install
 
-3. For Expo Go, donwload the Expo Go application from app store/play store and scan the generated qr code. This will open the app and you can use it immedietly. (Can skip the rest of the step.)
+   From here, if you want to proceed with Expo Go, follow step 3 to 6. If you want to continue with development build, jump to step 7 and proceed with next steps.
 
-4. For development build, build project
+3. For Expo Go, donwload the Expo Go application from app store/play store.
+
+4. Sign in to your account, both on Expo CLI and Expo Go app on your device.
+
+5. Run npx expo start --go
+
+6. Scan qr code with your device and continue to use the applciation.
+
+7. For development build, build project
 
    npx expo prebuild
 
-5. Run the project
+8. Run the project
 
    npm run android / npm run ios
 
