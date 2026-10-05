@@ -7,11 +7,18 @@ import {
 import { Asset } from "expo-asset";
 import { createURL } from "expo-linking";
 import * as SplashScreen from "expo-splash-screen";
-import { useColorScheme } from "react-native";
-import { useMemo } from "react";
+import { useColorScheme, StatusBar, AppState } from "react-native";
+import { useEffect, useMemo, useRef } from "react";
 
 import AuthProvider from "./store/useAuthContext";
 import RootNavigation from "./navigation/RootNavigation";
+import { getLoggedInUser } from "./services/auth.service";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LoggedInUserType } from "./interfaces/general";
+import { AuthStatusEnums } from "./enums/general";
+import useAuthentication from "./hooks/useAuthentication";
+
+const TIME_LIMIT = 0.5;
 
 Asset.loadAsync([
   ...NavigationAssets,
@@ -27,6 +34,8 @@ const linking = {
 };
 
 function AppContent() {
+  const { user } = useAuthentication();
+
   const colorScheme = useColorScheme();
   const theme = colorScheme === "dark" ? DarkTheme : DefaultTheme;
 
@@ -36,6 +45,95 @@ function AppContent() {
     () => createStaticNavigation(RootStack),
     [RootStack],
   );
+
+  const appState = useRef(AppState.currentState);
+  const { setAuthStatus } = useAuthentication();
+
+  async function userLeaveApp() {
+    console.log("leave");
+    if (!!user)
+      AsyncStorage.setItem(
+        "user",
+        JSON.stringify({ ...user, time: Date.now() }),
+      );
+  }
+
+  async function userReturnApp() {
+    console.log("return");
+    try {
+      const userData = await getLoggedInUser();
+
+      if (userData) {
+        const currentTime = Date.now();
+        const lastActive = (userData as LoggedInUserType).time;
+        const timeDiff = (currentTime - lastActive) / (1000 * 60);
+
+        if (timeDiff < TIME_LIMIT) {
+          await AsyncStorage.setItem(
+            "user",
+            JSON.stringify({ ...userData, time: Date.now() }),
+          );
+        } else {
+          setAuthStatus(AuthStatusEnums.UNAUTH);
+          await AsyncStorage.setItem("user", JSON.stringify(null));
+        }
+      } else setAuthStatus(AuthStatusEnums.UNAUTH);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function coldStart() {
+    console.log("cold");
+    try {
+      const userData = await getLoggedInUser();
+
+      if (!userData) {
+        setAuthStatus(AuthStatusEnums.UNAUTH);
+        return;
+      }
+
+      const currentTime = Date.now();
+      const lastActive = (userData as LoggedInUserType).time;
+      const timeDiff = (currentTime - lastActive) / (1000 * 60);
+
+      if (timeDiff < TIME_LIMIT) {
+        setAuthStatus(AuthStatusEnums.AUTH);
+        await AsyncStorage.setItem(
+          "user",
+          JSON.stringify({ ...userData, time: Date.now() }),
+        );
+      } else {
+        await AsyncStorage.setItem("user", JSON.stringify(null));
+        setAuthStatus(AuthStatusEnums.UNAUTH);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    coldStart();
+
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (
+        appState.current === "active" &&
+        nextAppState.match(/inactive|background/)
+      )
+        userLeaveApp();
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === "active"
+      )
+        userReturnApp();
+
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   return (
     <Navigation
@@ -51,6 +149,7 @@ function AppContent() {
 export function App() {
   return (
     <AuthProvider>
+      <StatusBar barStyle="dark-content" />
       <AppContent />
     </AuthProvider>
   );

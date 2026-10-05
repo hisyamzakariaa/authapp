@@ -1,7 +1,7 @@
 import CustomScreen from "../components/ui/CustomScreen";
 import Heading from "../components/ui/texts/Heading";
 
-const LoadinScreen = () => {
+const LoadingScreen = () => {
   return (
     <CustomScreen style={{ alignItems: "center", justifyContent: "center" }}>
       <Heading>Loading...</Heading>
@@ -9,4 +9,4 @@ const LoadinScreen = () => {
   );
 };
 
-export default LoadinScreen;
+export default LoadingScreen;

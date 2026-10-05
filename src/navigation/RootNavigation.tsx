@@ -8,20 +8,18 @@ import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
 import useAuthentication from "../hooks/useAuthentication";
 import { AuthStatusEnums } from "../enums/general";
-import LoadinScreen from "../screens/LoadinScreen";
-import useAuthValidation from "../hooks/useAuthValidation";
+import LoadingScreen from "../screens/LoadingScreen";
+import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 
 const RootNavigation = () => {
   const { authStatus } = useAuthentication();
-
-  useAuthValidation();
 
   return createNativeStackNavigator({
     screens:
       authStatus === AuthStatusEnums.UNKNOWN
         ? {
             Loading: createNativeStackScreen({
-              screen: LoadinScreen,
+              screen: LoadingScreen,
               options: {
                 headerShown: false,
               },
@@ -32,7 +30,6 @@ const RootNavigation = () => {
               Homescreen: createNativeStackScreen({
                 screen: HomeScreen,
                 options: {
-                  title: "Home",
                   headerShown: false,
                 },
               }),
@@ -41,14 +38,18 @@ const RootNavigation = () => {
               Login: createNativeStackScreen({
                 screen: LoginScreen,
                 options: {
-                  title: "Login",
                   headerShown: false,
                 },
               }),
               SignUp: createNativeStackScreen({
                 screen: SignupScreen,
                 options: {
-                  title: "Sign Up",
+                  headerShown: false,
+                },
+              }),
+              ForgotPassword: createNativeStackScreen({
+                screen: ForgotPasswordScreen,
+                options: {
                   headerShown: false,
                 },
               }),

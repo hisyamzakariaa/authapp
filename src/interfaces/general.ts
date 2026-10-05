@@ -54,6 +54,7 @@ export type RootStackParamList = {
   Login: undefined;
   SignUp: undefined;
   Homescreen: undefined;
+  ForgotPassword: undefined;
 };
 
 export type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
