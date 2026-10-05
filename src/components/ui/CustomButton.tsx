@@ -9,7 +9,7 @@ const CustomButton = ({ children, textStyle, ...props }: CustomButtonProps) => {
       style={{
         paddingVertical: 12,
         paddingHorizontal: 16,
-        backgroundColor: "#236E4A",
+        backgroundColor: "#8472E8",
         borderRadius: 8,
         opacity: props.disabled ? 0.7 : 1,
         ...props?.style,

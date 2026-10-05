@@ -65,7 +65,7 @@ const SignupScreen = () => {
         <YStack style={{ gap: 20 }}>
           <XStack style={{ gap: 10, justifyContent: "center" }}>
             <Body>Already have an account?</Body>
-            <Body style={{ color: "#236E4A" }} onPress={() => goBack()}>
+            <Body style={{ color: "#7A68E4" }} onPress={() => goBack()}>
               Login
             </Body>
           </XStack>

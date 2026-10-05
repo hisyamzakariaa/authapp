@@ -33,7 +33,11 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     AuthStatusEnums.UNKNOWN,
   );
 
-  async function login(data: Omit<UserType, "name">) {
+  async function login(rawData: Omit<UserType, "name">) {
+    const data = {
+      email: rawData.email.trim(),
+      password: rawData.password.trim(),
+    };
     const usersData = await getUserData();
 
     const user = usersData.find((item) => item.email === data.email);
@@ -56,7 +60,12 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     setAuthStatus(AuthStatusEnums.AUTH);
   }
 
-  async function signUp(data: UserType) {
+  async function signUp(rawData: UserType) {
+    const data = {
+      email: rawData.email.trim(),
+      name: rawData.name.trim(),
+      password: rawData.password.trim(),
+    };
     const userData = await getUserData();
 
     const exist = userData.some((item) => item.email === data.email);

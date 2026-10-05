@@ -58,7 +58,7 @@ function CustomInput<T>({
             color: isFocused ? "#0C1F17" : isError ? "#E5484D" : "#0C1F17",
             borderWidth: 1,
             borderColor: isFocused
-              ? "#30A46C"
+              ? "#AC9FED"
               : isError
                 ? "#F2555A"
                 : "#EDEDED",
