@@ -28,14 +28,20 @@ const SignupScreen = () => {
   return (
     <CustomScreen>
       <CustomKeyboardAvoidingView
-        contentContainerStyle={{ gap: 30, paddingTop: 30 }}
+        contentContainerStyle={{ paddingTop: 30, gap: 20 }}
       >
-        <Heading>Sign Up</Heading>
+        <YStack>
+          <Heading>Welcome Aboard!</Heading>
+          <Body style={{ maxWidth: 250 }}>
+            Create your account now to enjoy our best service!
+          </Body>
+        </YStack>
 
         <YStack
           style={{
             gap: 20,
             flex: 1,
+            paddingTop: 50,
           }}
         >
           <CustomInput
@@ -43,13 +49,17 @@ const SignupScreen = () => {
             field="name"
             label="Name"
             initialErrorMsg="Name is required"
+            inputProps={{ placeholder: "Fill in your name" }}
           />
 
           <CustomInput
             formik={formik}
             field="email"
             label="Email"
-            inputProps={{ keyboardType: "email-address" }}
+            inputProps={{
+              keyboardType: "email-address",
+              placeholder: "Fill in your email",
+            }}
             initialErrorMsg="Email is required"
           />
 
@@ -58,6 +68,9 @@ const SignupScreen = () => {
             formik={formik}
             label="Password"
             isPassword
+            inputProps={{
+              placeholder: "Create your password",
+            }}
             initialErrorMsg="Password is required"
           />
         </YStack>

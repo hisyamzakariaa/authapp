@@ -12,6 +12,7 @@ import { NavigationProp } from "../interfaces/general";
 import SuccessFailedModal from "../components/ui/SuccessFailedModal";
 import useSignInFormik from "../hooks/useSignInFormik";
 import CustomKeyboardAvoidingView from "../components/ui/CustomKeyboardAvoidingView";
+import { Ionicons } from "@expo/vector-icons";
 
 const LoginScreen = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -29,36 +30,56 @@ const LoginScreen = () => {
       <CustomKeyboardAvoidingView
         contentContainerStyle={{ gap: 50, paddingTop: 30 }}
       >
-        <Heading>Login</Heading>
+        <YStack style={{ alignItems: "center", gap: 10 }}>
+          <Ionicons name={"logo-twitch"} size={50} color="#7A68E4" />
+          <YStack>
+            <Heading style={{ textAlign: "center" }}>Welcome</Heading>
+            <Body style={{ textAlign: "center" }}>Sign in to continue</Body>
+          </YStack>
+        </YStack>
 
-        <YStack
-          style={{
-            gap: 20,
-            flex: 1,
-          }}
-        >
-          <CustomInput
-            formik={formik}
-            field="email"
-            label="Email"
-            inputProps={{ keyboardType: "email-address" }}
-            initialErrorMsg="Email is required"
-          />
+        <YStack style={{ flex: 1, gap: 50 }}>
+          <YStack
+            style={{
+              gap: 20,
+            }}
+          >
+            <CustomInput
+              formik={formik}
+              field="email"
+              inputProps={{
+                keyboardType: "email-address",
+                placeholder: "Email",
+              }}
+              initialErrorMsg="Email is required"
+              icon={<Ionicons name={"person-sharp"} size={22} color="#666" />}
+            />
 
-          <CustomInput
-            formik={formik}
-            field="password"
-            label="Password"
-            isPassword
-            initialErrorMsg="Password is required"
-          />
+            <CustomInput
+              formik={formik}
+              field="password"
+              isPassword
+              initialErrorMsg="Password is required"
+              inputProps={{ placeholder: "Password" }}
+              icon={
+                <Ionicons name={"lock-closed-outline"} size={22} color="#666" />
+              }
+            />
+          </YStack>
+
+          <Body
+            style={{ color: "#7A68E4", fontSize: 16, alignSelf: "flex-end" }}
+            onPress={() => navigate("ForgotPassword")}
+          >
+            Forgot Password?
+          </Body>
         </YStack>
 
         <YStack style={{ gap: 20 }}>
           <XStack style={{ gap: 10, justifyContent: "center" }}>
             <Body>Don't have an account?</Body>
             <Body
-              style={{ color: "#236E4A" }}
+              style={{ color: "#7A68E4" }}
               onPress={() => navigate("SignUp")}
             >
               Sign Up

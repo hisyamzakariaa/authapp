@@ -42,7 +42,8 @@ export type FormikInstance<T> = FormikProps<T>;
 export interface CustomInputProps<T> {
   formik: FormikProps<T>;
   field: keyof T & string;
-  label: string;
+  icon?: ReactNode;
+  label?: string;
   inputProps?: TextInputProps;
   containerProps?: ViewProps;
   isPassword?: boolean;

@@ -11,6 +11,7 @@ import { CustomInputProps } from "../../interfaces/general";
 function CustomInput<T>({
   formik,
   field,
+  icon,
   label,
   inputProps,
   containerProps,
@@ -31,6 +32,18 @@ function CustomInput<T>({
       {label && <Body>{label}</Body>}
 
       <XStack style={{ alignItems: "center" }}>
+        {icon && (
+          <YStack
+            style={{
+              position: "absolute",
+              zIndex: 1,
+              left: 10,
+            }}
+          >
+            {icon}
+          </YStack>
+        )}
+
         <TextInput
           placeholder="Fill in here"
           placeholderTextColor={"#7E7E7E"}
@@ -63,6 +76,7 @@ function CustomInput<T>({
                 ? "#F2555A"
                 : "#EDEDED",
             flex: 1,
+            paddingLeft: !!icon ? 40 : 10,
             ...inputProps?.style,
           }}
         />
