@@ -50,7 +50,6 @@ function AppContent() {
   const { setAuthStatus } = useAuthentication();
 
   async function userLeaveApp() {
-    console.log("leave");
     if (!!user)
       AsyncStorage.setItem(
         "user",
@@ -59,7 +58,6 @@ function AppContent() {
   }
 
   async function userReturnApp() {
-    console.log("return");
     try {
       const userData = await getLoggedInUser();
 
@@ -84,7 +82,6 @@ function AppContent() {
   }
 
   async function coldStart() {
-    console.log("cold");
     try {
       const userData = await getLoggedInUser();
 
