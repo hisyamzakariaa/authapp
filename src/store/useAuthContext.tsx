@@ -3,12 +3,13 @@ import {
   Dispatch,
   ReactNode,
   SetStateAction,
+  useEffect,
   useState,
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { UserType } from "../interfaces/general";
-import { getUserData } from "../services/auth.service";
+import { getLoggedInUser, getUserData } from "../services/auth.service";
 import { AuthStatusEnums } from "../enums/general";
 
 export const AuthContext = createContext<{
@@ -54,7 +55,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
     await AsyncStorage.setItem(
       "user",
-      JSON.stringify({ ...data, time: Date.now() }),
+      JSON.stringify({ ...user, time: Date.now() }),
     );
     setUser(user);
     setAuthStatus(AuthStatusEnums.AUTH);
@@ -91,6 +92,17 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     setAuthStatus(AuthStatusEnums.UNAUTH);
   }
+
+  async function fetchLoggedInUser() {
+    const user = await getLoggedInUser();
+
+    if (user)
+      setUser({ email: user.email, name: user.name, password: user.password });
+  }
+
+  useEffect(() => {
+    if (authStatus === AuthStatusEnums.AUTH) fetchLoggedInUser();
+  }, [authStatus]);
 
   return (
     <AuthContext.Provider
