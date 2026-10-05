@@ -38,7 +38,7 @@ This will install the build on your phone and you can proceed to use the authent
 
 ## Notes
 
-In App.tsx, there is a constant called TIME_LIMIT. Adjust this value accordingly to test the credential validity after the given time. Ideally, when the app is reopen after the adjusted time limit, it will reset the authentication status and reroute user to sign in screen. User will need to login again to continue using the app.
+In App.tsx, there is a constant called TIME_LIMIT. Adjust this value (in second) accordingly to test the credential validity after the given time. Ideally, when the app is reopen after the adjusted time limit, it will reset the authentication status and reroute user to sign in screen. User will need to login again to continue using the app.
 
 ## Resources
 
