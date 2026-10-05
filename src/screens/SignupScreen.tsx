@@ -12,6 +12,7 @@ import { NavigationProp } from "../interfaces/general";
 import CustomKeyboardAvoidingView from "../components/ui/CustomKeyboardAvoidingView";
 import useSignupFormik from "../hooks/useSignupFormik";
 import SuccessFailedModal from "../components/ui/SuccessFailedModal";
+import { Ionicons } from "@expo/vector-icons";
 
 const SignupScreen = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -28,20 +29,23 @@ const SignupScreen = () => {
   return (
     <CustomScreen>
       <CustomKeyboardAvoidingView
-        contentContainerStyle={{ paddingTop: 30, gap: 20 }}
+        contentContainerStyle={{ paddingTop: 30, gap: 50 }}
       >
-        <YStack>
-          <Heading>Welcome Aboard!</Heading>
-          <Body style={{ maxWidth: 250 }}>
-            Create your account now to enjoy our best service!
-          </Body>
+        <YStack style={{ alignItems: "center", gap: 10 }}>
+          <Ionicons name={"train-outline"} size={50} color="#7A68E4" />
+
+          <YStack>
+            <Heading style={{ textAlign: "center" }}>Welcome Aboard!</Heading>
+            <Body style={{ textAlign: "center" }}>
+              Create your account now to enjoy our best service!
+            </Body>
+          </YStack>
         </YStack>
 
         <YStack
           style={{
             gap: 20,
             flex: 1,
-            paddingTop: 50,
           }}
         >
           <CustomInput
