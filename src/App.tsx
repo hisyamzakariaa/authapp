@@ -18,7 +18,7 @@ import { AuthStatusEnums } from "./enums/general";
 import useAuthentication from "./hooks/useAuthentication";
 import LoadingScreen from "./screens/LoadingScreen";
 
-const TIME_LIMIT = 0.5;
+const TIME_LIMIT = 30;
 
 Asset.loadAsync([
   ...NavigationAssets,
@@ -57,7 +57,7 @@ function AppContent() {
       if (userData) {
         const currentTime = Date.now();
         const lastActive = (userData as LoggedInUserType).time;
-        const timeDiff = (currentTime - lastActive) / (1000 * 60);
+        const timeDiff = (currentTime - lastActive) / 1000;
 
         if (timeDiff < TIME_LIMIT) {
           await AsyncStorage.setItem(
@@ -85,7 +85,7 @@ function AppContent() {
 
       const currentTime = Date.now();
       const lastActive = (userData as LoggedInUserType).time;
-      const timeDiff = (currentTime - lastActive) / (1000 * 60);
+      const timeDiff = (currentTime - lastActive) / 1000;
 
       if (timeDiff < TIME_LIMIT) {
         setAuthStatus(AuthStatusEnums.AUTH);

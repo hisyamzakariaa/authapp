@@ -1,9 +1,10 @@
-import { Modal } from "react-native";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
+import { Ionicons } from "@expo/vector-icons";
 
 import YStack from "./YStack";
 import Heading from "./texts/Heading";
 import Body from "./texts/Body";
+import CustomModal from "./CustomModal";
 
 const SuccessFailedModal = ({
   open,
@@ -30,36 +31,25 @@ const SuccessFailedModal = ({
   }, [open, redirectFunction]);
 
   return (
-    <Modal
-      backdropColor={"transparent"}
-      visible={open}
-      onRequestClose={() => {
-        setOpen(false);
-      }}
-    >
+    <CustomModal open={open} setOpen={setOpen}>
       <YStack
         style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
+          backgroundColor: "white",
           padding: 16,
+          borderRadius: 10,
+          gap: 10,
+          alignItems: "center",
         }}
-        onPress={() => setOpen(false)}
       >
-        <YStack
-          style={{
-            backgroundColor: "white",
-            padding: 16,
-            borderRadius: 10,
-            gap: 10,
-          }}
-        >
+        <Ionicons name={"warning"} size={70} color="#E5484D" />
+
+        <YStack style={{ alignItems: "center" }}>
           <Heading style={{ fontSize: 24 }}>{header}</Heading>
 
-          <Body>{description}</Body>
+          <Body style={{ textAlign: "center" }}>{description}</Body>
         </YStack>
       </YStack>
-    </Modal>
+    </CustomModal>
   );
 };
 
