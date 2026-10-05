@@ -8,8 +8,8 @@ import YStack from "../components/ui/YStack";
 import CustomButton from "../components/ui/CustomButton";
 import { NavigationProp } from "../interfaces/general";
 import SuccessFailedModal from "../components/ui/SuccessFailedModal";
-import useSignInFormik from "../hooks/useSignInFormik";
 import CustomKeyboardAvoidingView from "../components/ui/CustomKeyboardAvoidingView";
+import useResetPassFormik from "../hooks/useResetPassFormik";
 
 const ForgotPasswordScreen = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -17,8 +17,8 @@ const ForgotPasswordScreen = () => {
 
   const [status, setStatus] = useState<"success" | "failed" | null>(null);
 
-  const { navigate } = useNavigation<NavigationProp>();
-  const formik = useSignInFormik();
+  const { replace } = useNavigation<NavigationProp>();
+  const formik = useResetPassFormik();
 
   const isError = !!formik.errors.email || !!formik.errors.password;
 
@@ -32,7 +32,7 @@ const ForgotPasswordScreen = () => {
             flex: 1,
             alignItems: "center",
             justifyContent: "center",
-            gap: 50,
+            gap: 30,
           }}
         >
           <Heading>Reset Password</Heading>
@@ -43,8 +43,21 @@ const ForgotPasswordScreen = () => {
               field="email"
               label="Email"
               containerProps={{ style: { width: "100%" } }}
-              inputProps={{ keyboardType: "email-address" }}
+              inputProps={{
+                keyboardType: "email-address",
+                placeholder: "Enter your email",
+              }}
               initialErrorMsg="Email is required"
+            />
+
+            <CustomInput
+              formik={formik}
+              field="password"
+              label="New Password"
+              containerProps={{ style: { width: "100%" } }}
+              initialErrorMsg="Email is required"
+              inputProps={{ placeholder: "Enter your new password" }}
+              isPassword
             />
 
             <CustomButton
@@ -59,6 +72,7 @@ const ForgotPasswordScreen = () => {
                 try {
                   await formik.submitForm();
                   setStatus("success");
+                  replace("Login");
                 } catch (error) {
                   setStatus("failed");
                   setErrorMessage((error as Error).message);
@@ -66,7 +80,7 @@ const ForgotPasswordScreen = () => {
                 }
               }}
             >
-              {formik.isSubmitting ? "Logging in..." : "Login"}
+              {formik.isSubmitting ? "Resetting..." : "Reset"}
             </CustomButton>
           </YStack>
         </YStack>
@@ -75,11 +89,9 @@ const ForgotPasswordScreen = () => {
       <SuccessFailedModal
         open={open}
         setOpen={setOpen}
-        header={
-          status === "success" ? "Login Successfully!" : "Failed to login!"
-        }
+        header={status === "success" ? "Success!" : "Process Failed!"}
         description={
-          status === "success" ? "Login Successfully!" : errorMessage
+          status === "success" ? "Password reset successfully!" : errorMessage
         }
       />
     </CustomScreen>

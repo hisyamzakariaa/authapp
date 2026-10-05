@@ -17,6 +17,7 @@ export const AuthContext = createContext<{
   user: UserType | null;
   setAuthStatus: Dispatch<SetStateAction<AuthStatusEnums>>;
   login: (data: Omit<UserType, "name">) => Promise<void>;
+  resetPass: (data: Omit<UserType, "name">) => Promise<void>;
   signUp: (data: UserType) => Promise<void>;
   logOut: () => Promise<void>;
 }>({
@@ -24,6 +25,7 @@ export const AuthContext = createContext<{
   user: null,
   setAuthStatus: () => {},
   login: async () => {},
+  resetPass: async () => {},
   signUp: async () => {},
   logOut: async () => {},
 });
@@ -100,6 +102,26 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       setUser({ email: user.email, name: user.name, password: user.password });
   }
 
+  async function resetPass(rawData: Omit<UserType, "name">) {
+    const data = {
+      email: rawData.email.trim(),
+      password: rawData.password.trim(),
+    };
+    const usersData = await getUserData();
+
+    const user = usersData.find((item) => item.email === data.email);
+
+    if (!user) {
+      throw new Error("User not found. Make sure you give the correct email.");
+    }
+
+    const index = usersData.findIndex((item) => item.email === data.email);
+
+    usersData[index].password = data.password;
+
+    await AsyncStorage.setItem("users", JSON.stringify(usersData));
+  }
+
   useEffect(() => {
     if (authStatus === AuthStatusEnums.AUTH) fetchLoggedInUser();
   }, [authStatus]);
@@ -109,6 +131,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         authStatus,
         user,
+        resetPass,
         setAuthStatus,
         login,
         logOut,
