@@ -10,6 +10,7 @@ import { NavigationProp } from "../interfaces/general";
 import SuccessFailedModal from "../components/ui/SuccessFailedModal";
 import CustomKeyboardAvoidingView from "../components/ui/CustomKeyboardAvoidingView";
 import useResetPassFormik from "../hooks/useResetPassFormik";
+import BackArrow from "../components/ui/BackArrow";
 
 const ForgotPasswordScreen = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -24,6 +25,7 @@ const ForgotPasswordScreen = () => {
 
   return (
     <CustomScreen>
+      <BackArrow />
       <CustomKeyboardAvoidingView
         contentContainerStyle={{ gap: 50, paddingTop: 30 }}
       >
