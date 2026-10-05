@@ -38,7 +38,9 @@ This will install the build on your phone and you can proceed to use the authent
 
 ## Notes
 
-In App.tsx, there is a constant called TIME_LIMIT. Adjust this value (in second) accordingly to test the credential validity after the given time. Ideally, when the app is reopen after the adjusted time limit, it will reset the authentication status and reroute user to sign in screen. User will need to login again to continue using the app.
+- In App.tsx, there is a constant called TIME_LIMIT. Adjust this value (in second) accordingly to test the credential validity after the given time. Ideally, when the app is reopen after the adjusted time limit, it will reset the authentication status and reroute user to sign in screen. User will need to login again to continue using the app.
+
+- User's credential and user list are stored in the async storage
 
 ## Resources
 
@@ -48,3 +50,4 @@ This app uses
 2. Formik -> Form or inputs handling
 3. Yup -> Validation
 4. Vector Icons -> Icons
+5. Storage -> Async Storage
