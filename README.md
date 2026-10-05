@@ -22,7 +22,7 @@ It includes the following feauture:
 
 5. Run npx expo start --go
 
-6. Scan qr code with your phone and continue to use the applciation.
+6. Scan qr code with your phone and continue to use the applciation. (For ios users, scan from device camera and for android users, can scan using the Expo Go app)
 
 7. For development build, build project
 
